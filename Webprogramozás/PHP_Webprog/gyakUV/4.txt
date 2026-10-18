@@ -1,0 +1,16 @@
+<meta charset="utf-8">
+
+<table border="1">
+<tr><td>Brand</td><td>Tipus</td><td>Bej.datum</td><td>Tolto</td></tr>
+    <?php
+        $connect=pg_connect('host=\'localhost\' user=\'lekerdezes\' password=\'qWePot567\' dbname=\'c-ta\' port=\'5432\'');
+        $sql="SELECT brand, model, announced, charger FROM phones WHERE phones.charger='acp';";
+        $query=pg_exec($connect,$sql);
+        if (pg_num_rows($query)>0){
+            for($i=0; $i<pg_num_rows($query); $i++){
+                 print "<tr><td>".pg_result($query,$i,0)."</td><td>".pg_result($query,$i,1).
+                 "</td><td>".pg_result($query,$i,2)."</td><td>".pg_result($query,$i,3)."</td></tr>";
+            }
+        }
+    ?>
+</table>

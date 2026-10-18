@@ -1,0 +1,125 @@
+$handle=fopen($filename,"r");   // r,w,a: olvasásra/írásra/hozzáférésre
+                                // handle: erõforrásazonosítót ad
+print fgets($handle);
+print fread($handle,5)."<br /><br />";          // fájlmutatót mozdította
+fseek($handle,1,SEEK_SET);      // _CUR: aktuális, _SET: eleje, _END: vége
+
+while(!feof($handle))
+    print nl2br(fgets($handle));
+    // (new line to br: a windows/linux sorvégejeleket <br />-re cseréli)
+
+fclose($handle);
+
+
+
+print file_get_contents($filename);
+
+
+for($i=0; $i<=filesize($filename); ++$i)
+    print fgetc($handle);
+
+
+
+$filename="/tmp/asti.txt";
+$tartalom="Akármi";
+file_put_contents($filename, $tartalom);        // Teljesen felülírja a fájlt!!!
+
+
+
+
+
+        $handle=fopen($filename,"a");   // w: tartalom elvész, a: hozzáfûz
+
+        flock($handle, LOCK_EX);        // zárolás:
+        // _EX: csak mi, _SH: csak shell(csak mi írhatjuk de folyamatok hozzáférhetnek)
+
+        $tartalom="Ez kerül a fájlba.";
+        fwrite($handle, $tartalom);
+
+        flock($handle, LOCK_UN);        // feloldás
+
+        fclose($handle);
+
+
+FÁJLFELTÖLTÉS
+
+<meta charset="utf-8">
+<?php
+print '<form name="urlap" enctype="multipart/form-data" action="" method="post">';
+print '<input type="file" name="filenev">';
+print '<input type="submit" name="oke" value="Feltöltés">';
+print '</form>';
+
+if(/*isset($_POST["oke"]) && */isset($_FILES["filenev"])){
+    if( ! $_FILES["filenev"]["error"]){
+        print "Fájlnév: ".$_FILES["filenev"]["name"]."<br />";
+        print "Fájlméret: ".$_FILES["filenev"]["size"]."<br />";
+        print "Fájltípus: ".$_FILES["filenev"]["type"]."<br />";
+        print "Ideiglenes név: ".$_FILES["filenev"]["tmp_name"]."<br />";
+
+        $forras=$_FILES["filenev"]["tmp_name"];
+        $cel="files/".$_FILES["filenev"]["name"];
+        move_uploaded_file($forras,$cel);
+
+
+    } else print "Hiba a fájl feltöltése közben!";
+}
+?>
+
+
+
+
+while(!feof($handle)){
+        $sor = fgets($handle);
+        $soradat = explode("|",$sor);
+        if($soradat[2][1]=='H' && $soradat[2][2]=='U' && $soradat[2][3]=='N')
+        print "<tr><td>".$soradat[0]."</td><td>".$soradat[1]."</td><td>".$soradat[2]."</td></tr>";
+}
+
+
+
+
+----------------------------------------------------------------
+
+
+ // !!!
+ $filename="/tmp/urlapasti.txt";
+ if(!file_exists($filename)){
+  $handle=fopen($filename,"w");
+  if($handle==false)
+    die("unable to create file");
+  fclose($handle);
+ }
+ if(1/*file_exists($filename) && is_file($filename) && is_writable($filename)*/){
+     $handle=fopen($filename,"a");
+     $ujtartalom=$_POST["veznev"]."|".$_POST["kernev"]."|".$_POST["user"]."|".$_POST["jelszo"]."|".
+     $_POST["ev"]."|".$_POST["honap"]."|".$_POST["nap"]."|";
+     fwrite($handle, $ujtartalom);
+     if ($_POST["nem"]=="no") $ujtartalom="2|"; else $ujtartalom="1|";
+     fwrite($handle, $ujtartalom);
+     if(isset($_POST["angol"])) $angol=1; else $angol=0;
+     if(isset($_POST["nemet"])) $nemet=1; else $nemet=0;
+     if(isset($_POST["olasz"])) $olasz=1; else $olasz=0;
+     $ujtartalom=$angol."|".$nemet."|".$olasz."||";
+     fwrite($handle, $ujtartalom);
+     fclose($handle);
+     //print file_get_contents($filename);
+     //move_uploaded_file($filename,"files/urlap2.txt");
+     $handle=fopen($filename,"r");
+     $tartalom=file_get_contents($filename);
+     $adatok=array();
+     $adatok=explode("||",$tartalom);
+     print "<table border=\"1\">";
+     print "<tr><th>VezNev</th><th>KerNev</th><th>FelhNev</th><th>Jelszo</th><th>Ev</th>";
+     print "<th>Ho</th><th>Nap</th><th>Nem</th><th>Angol</th><th>Nemet</th><th>Olasz</th></tr>";
+     for($i=0;$i<sizeof($adatok)-1;++$i){
+        //print $adatok[$i]."<br />";
+        $adat=explode("|",$adatok[$i]);
+        print "<tr><td>".$adat[0]."</td><td>".$adat[1]."</td><td>".$adat[2]."</td><td>".$adat[3]."</td><td>".$adat[4]."</td>";
+        print "<td>".$adat[5]."</td><td>".$adat[6]."</td><td>".$adat[7]."</td><td>".$adat[8]."</td><td>".$adat[9]."</td><td>".$adat[10]."</td></tr>";
+     }
+     print "</table>";
+     fclose($handle);
+ }
+
+ // !!!

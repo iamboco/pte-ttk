@@ -1,0 +1,92 @@
+﻿<meta charset="utf-8">
+
+<?php
+
+function dblogin(){
+$host="localhost";
+$user="user";
+$pass="pass";
+$dbname="user";
+$port="5432";
+$connect=pg_connect('host=\''.$host.'\' user=\''.$user.'\' password=\''.$pass.
+'\' dbname=\''.$dbname.'\' port=\''.$port.'\'');
+return($connect);
+}
+
+?>
+
+<table>
+<tr border="1"><td border="1">Pénznem kód</td><td border="1" colspan="2">Árfolyamok</td><td border="1">Egyenleg</td><td border="1" colspan="3">Opciók</td></tr>
+<tr border="1"><td border="1"></td><td border="1">Vételi</td><td border="1">Eladási</td><td border="1"></td><td border="1">Felvétel/kiadás</td><td border="1">Módosítás</td><td border="1">Törlés</td></tr>
+    <?php
+        $connect=dblogin();
+        $sql="SELECT * FROM penz ORDER BY kod ASC;";
+        $query=pg_exec($connect,$sql);
+        if (pg_num_rows($query)>0){
+            for($i=0; $i<pg_num_rows($query); $i++){
+                print '<tr>';
+                print '<td>';
+                print pg_result($query,$i,0);
+                print '</td>';
+                print '<td>';
+                print pg_result($query,$i,1);
+                print '</td>';
+                print '<td>';
+                print pg_result($query,$i,2);
+                print '</td>';
+                print '<td>';
+                print pg_result($query,$i,3);
+                print '</td>';
+                print '<td>';
+                print '<a href="felvkiad.php?kod='.pg_result($query,$i,0).'">Felvétel/Kiadás</a>';
+                print '</td>';
+                print '<td>';
+                print '<a href="mod.php?kod='.pg_result($query,$i,0).'">Árf.módosítás</a>';
+                print '</td>';
+                print '<td>';
+                print '<a href="torol.php?kod='.pg_result($query,$i,0).'">Törlés</a>';
+                print '</td>';
+                print '</tr>';
+            }
+        }
+    ?>
+</table>
+
+<form name="felvkiad" method="post" action="">
+Művelet: <select name="muvelet">
+<option value="felv">Felvétel</option>
+<option value="befi">Befizetés</option>
+</select><br />
+Érték: <input type="text" name="ertek" maxlength="10" size="15"><br />
+<input type="submit" name="oke" value="Kész">
+</form>
+
+<?php
+
+if(isset($_POST["oke"])){
+    if(isset($_POST["ertek"])){
+        if(is_numeric($_POST["ertek"])){
+           $connect=dblogin();
+           $sql="SELECT * FROM penz WHERE kod='".$_GET["kod"]."';";
+           $query=pg_exec($connect,$sql);
+           if($_POST["muvelet"]=="felv"){
+                if(pg_result($query,0,3) >= $_POST["ertek"]){
+                    $ujertek = pg_result($query,0,3) - $_POST["ertek"];
+                    $sql="UPDATE penz SET egyenleg = ".$ujertek." WHERE kod='".$_GET["kod"]."'";
+                    $query=pg_exec($connect,$sql);
+                    print "Érték csökkentve, új érték:".$ujertek;
+                } else print "A megadott érték túl nagy, ennyi nem elérhető ebből a pénznemből!";
+            } else {
+                  $ujertek = pg_result($query,0,3) + $_POST["ertek"];
+                  $sql="UPDATE penz SET egyenleg = ".$ujertek." WHERE kod='".$_GET["kod"]."'";
+                  $query=pg_exec($connect,$sql);
+                  print "Érték megnövelve, új érték:".$ujertek;
+            }
+        } else print "Nem numerikus érték!";
+    } else print "Hiányzó érték!";
+}
+
+?>
+
+<br />
+<a href="penzadmin.php">Vissza</a> 

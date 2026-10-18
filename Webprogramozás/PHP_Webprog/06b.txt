@@ -1,0 +1,38 @@
+<?php
+
+for ($i=0; $i<100; $i++)
+    $szamok[]=rand(1,100);
+
+print "<pre>";
+print_r($szamok);
+print "</pre>";
+
+//sort($szamok);                // ez eredeti elemekkel rendez, nem másolattal, ÚJRAINDEXEL!
+asort($szamok);         // megtartja az indexek számait (associated sort)
+//rsort($szamok);               // visszafelé rendez
+//arsort($szamok);              // visszafelé rendez indexszám-megtartással
+print "<pre>";
+print_r($szamok);
+print "</pre>";
+
+
+
+$szamokb[5]=23;
+$szamokb[43]=13;
+$szamokb[2]=2;
+$szamokb[7]=3;
+
+print "<pre>";
+print_r($szamokb);
+print "</pre>";
+
+ksort($szamokb);                //indexek szerint rendez
+//krsort($szamokb);     //indexek szerint fordítva rendez
+
+
+print "<pre>";
+print_r($szamokb);
+print "</pre>";
+
+
+?>

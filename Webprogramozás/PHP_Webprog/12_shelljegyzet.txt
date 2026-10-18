@@ -1,0 +1,86 @@
+					//(Ctrl+Ins a másolás)
+> psql <felhasználónév>
+					//Ha -> a prompt, akkor még benne vagyunk egy SQL parancsban, =>nek kel lennie
+> \d					//Tábláink kiírása
+> CREATE TABLE users (username varchar(15) PRIMARY KEY, level smallint, password char(32));
+> \d users
+> ALTER USER "asti" WITH PASSWORD 'asdacxynbv342sdf_3r2we';		//asdacxynbv342sdf_3r2we
+> \q					//Kilépés
+
+
+Pl. akarmi.inc.php nevet célszerû adni, ha include-olni fogjuk, így nem olvashatja ki a felhasználó
+(kiértékelõdik a PHP)
+
+> INSERT INTO users VALUES ('admin',0,md5('admin'));
+> SELECT * FROM users;
+> DELETE FROM users WHERE username='user';			// sor törlése
+> UPDATE users SET password = md5('user123') WHERE username='user';
+
+...
+
+> CREATE TABLE usertipus(level smallint PRIMARY KEY, tipus varchar(15) NOT NULL);
+> INSERT INTO usertipus VALUES (0,'Adminisztrátor');
+> INSERT INTO usertipus VALUES (1,'Felhasználó');
+> 
+
+
+
+
+
+asti@c-ta-php:~/public_html> psql asti
+psql (9.0.3)
+Type "help" for help.
+
+asti=> SELECT * from usertipus;
+ level |     tipus
+-------+----------------
+     0 | Adminisztrátor
+     1 | Felhasználó
+(2 rows)
+
+asti=> SELECT * from users;
+ username  | level |             password
+-----------+-------+----------------------------------
+ admin     |     0 | 21232f297a57a5a743894a0e4a801fc3
+ user      |     1 | 6ad14ba9986e3615423dfca256d04e3f
+           |     0 | d41d8cd98f00b204e9800998ecf8427e
+ adminbela |     0 | d41d8cd98f00b204e9800998ecf8427e
+(4 rows)
+
+asti=> DELETE FROM users WHERE username='';
+DELETE 1
+asti=> SELECT * from users;
+ username  | level |             password
+-----------+-------+----------------------------------
+ admin     |     0 | 21232f297a57a5a743894a0e4a801fc3
+ user      |     1 | 6ad14ba9986e3615423dfca256d04e3f
+ adminbela |     0 | d41d8cd98f00b204e9800998ecf8427e
+(3 rows)
+
+asti=> \q
+asti@c-ta-php:~/public_html> mcedit tizenkettedik_admin.php
+
+asti@c-ta-php:~/public_html> mcedit tizenegyedikc_user.php
+
+asti@c-ta-php:~/public_html> mcedit tizenkettedik_admin.php
+
+asti@c-ta-php:~/public_html> psql asti
+psql (9.0.3)
+Type "help" for help.
+
+asti=> SELECT * from users;
+ username  | level |             password
+-----------+-------+----------------------------------
+ admin     |     0 | 21232f297a57a5a743894a0e4a801fc3
+ user      |     1 | 6ad14ba9986e3615423dfca256d04e3f
+ adminbela |     0 | d41d8cd98f00b204e9800998ecf8427e
+(3 rows)
+
+asti=> SELECT * from usertipus;
+ level |     tipus
+-------+----------------
+     0 | Adminisztrátor
+     1 | Felhasználó
+(2 rows)
+
+asti=>

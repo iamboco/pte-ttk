@@ -1,0 +1,67 @@
+Printf formázásai
+-----------------
+
+printf("<body bgcolor=\"#%02X%02X%02X\">",$r,$g,$b);
+        // 02 => hány számjegy legyen a végeredmény, berak egy-egy 0-t az egyjegyûekhez
+        // "%+5X" - '+'-okkal tölti fel 5 szélességû helyen
+        // %.5f - 5 tizedesjegy pontossággal való kiírás, csak az f formátumúakkal jó
+        // %2\$'+5X' - 2.helyen levõt írja ki
+        // pl. printf("<br /> %2\$'+5X%3\$'+5X",$a,$b,$c);
+
+
+Függvények:
+-----------
+
+function d2b($szam){
+    printf("%b <br />", $szam);
+}
+
+function atvalt($szam, &$bin, &$okt, &$hex){
+    $bin = sprintf("%b", $szam);
+    $okt = sprintf("%o", $szam);
+    global $hexa;
+    $hex = sprintf("%x", $szam);
+    static $lefutas=0;          // elsõ híváskor kap egy 0-s kezdõértéket, utána már nem
+    ++$lefutas;
+    print "<br />$lefutas-szer futott le<br />";
+    $hexa = sprintf("%x", $szam);
+    return(true);
+}
+print $hexa; // globális volt
+
+
+function_exists("atvalt")	// létezik-e a függvény
+
+
+
+Fájlkezelés:
+------------
+
+$filename="nyolcadik_fvek.php";
+// így külön fájlban is lehet -> a külön fájl csak a fv.-eket tartalmazza szintén <?php ?> tagek közt
+
+if(file_exists($filename) &&                    // van-e ilyen fájl
+    is_file($filename) &&                       // fájl-e
+                        // is_dir($filename)    // könyvtár-e
+                                    // (PHP nem tesz köztük különbséget)
+
+    is_readable($filename)){                    // olvasható-e
+                // is_writable($filename)       // írható-e
+                // is_executable($filename)     // futtatható-e
+
+		include("nyolcadik_fvek.php");
+    		//require("nyolcadik_fvek.php");
+			// require: felfüggeszti a scriptet ha nincs ilyen fájl
+
+	print "<br />oke<br />";
+
+    //require_once("nyolcadik_fvek.php");       // ugyanazt nem tölti be újra ha már volt
+}
+
+
+filesize($filename)		// fájlméret byte-ban
+fileatime($filename)		// Utolsó hozzáférés (eredménye a Unix idõbélyeg (1970.01.01.) óta eltelt másodpercek száma)
+  date_default_timezone_set("Europe/Budapest");
+  print "Utolsó hozzáférés: ".date("Y.m.d. H:i:s",fileatime($filename));
+  print "Utolsó módosítás: ".date("Y.m.d. H:i:s",filemtime($filename));
+  print "Utolsó változtatás: ".date("Y.m.d. H:i:s",filectime($filename));

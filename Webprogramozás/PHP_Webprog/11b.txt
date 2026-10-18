@@ -1,0 +1,39 @@
+<?php
+header("Content-type: image/png");
+
+$kep = imagecreate(800,400);
+$feher=imagecolorallocate($kep,255,255,255);
+$fekete=imagecolorallocate($kep,0,0,0);
+$kek=imagecolorallocate($kep,0,0,255);
+$piros=imagecolorallocate($kep,255,0,0);
+
+
+
+imageline($kep,20,350,760,350,$fekete);
+imageline($kep,30,30,30,370,$fekete);
+imageline($kep,30,30,35,40,$fekete);
+imageline($kep,30,30,25,40,$fekete);
+imageline($kep,760,350,750,355,$fekete);
+imageline($kep,760,350,750,345,$fekete);
+
+$n=20;
+for($i=0; $i<$n; ++$i)
+    $szamok[]=rand(0,300);
+$min=min($szamok);
+$max=max($szamok);
+
+for($i=0; $i<count($szamok)-1; ++$i) {
+    imageline($kep,($i+1)*720/count($szamok),350-$szamok[$i],
+        ($i+2)*720/count($szamok),350-$szamok[$i+1],$fekete);
+    if($szamok[$i]===$min || $szamok[$i]===$max) $szin=$piros; else $szin=$kek;
+    imageline($kep,($i+1)*720/count($szamok)-5,350-$szamok[$i]-5,
+        ($i+1)*720/count($szamok)+5,350-$szamok[$i]+5,$szin);
+    imageline($kep,($i+1)*720/count($szamok)-5,350-$szamok[$i]+5,
+        ($i+1)*720/count($szamok)+5,350-$szamok[$i]-5,$szin);
+
+}
+
+imagepng($kep);
+imagedestroy($kep);
+
+?>

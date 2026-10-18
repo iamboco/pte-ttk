@@ -1,0 +1,2 @@
+Az infile.txt-ben levo szamok osszege:
+136

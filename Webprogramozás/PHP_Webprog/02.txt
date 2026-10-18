@@ -1,0 +1,167 @@
+
+<meta charset="utf-8">
+<?php
+
+$a=12345;
+$b=3;
+if(is_integer($a/$b))
+ print "$b osztója $a számnak";
+
+/*
+$a=33;
+$a=$a+1; $a+=1; $a++;
+print ($a++);
+print (++$a);
+print $a;
+*/
+
+/*
+$a=5;
+settype($a, "double");
+settype($a, "string");
+settype($a, "bool");
+settype($a, "integer");
+
+var_dump($a);
+
+$a1 = (double) $a;
+$a2 = (string) $a;
+$a3 = (bool) $a;
+$a4 = (integer) $a;
+*/
+
+/*
+$a=5;
+if (is_integer($a))
+ print "\$a típusa: egész";
+elseif (is_double($a))
+ print "\$a típusa: lebegõpontos";
+elseif (is_string($a))
+ print "\$a típusa: karakterlánc";
+elseif (is_bool($a))
+ print "\$a típusa: logikai";
+else
+ print "\$a típusa: egyéb";
+*/
+
+/*
+$a=null;
+if (is_integer($a))
+{
+ print "\$a típusa: egész";
+}
+if (is_double($a))
+{
+ print "\$a típusa: lebegõpontos";
+}
+if (is_string($a))
+{
+ print "\$a típusa: karakterlánc";
+}
+if (is_bool($a))
+{
+ print "\$a típusa: logikai";
+}
+//if (!is_integer($a) && !is_double($a) AND !is_string($a) && !is_bool($a))
+if (!(is_integer($a) || is_double($a) OR is_string($a) || is_bool($a)))
+{
+ print "egyéb";
+}
+*/
+
+
+/*
+
+$a=5;
+if (is_integer($a))
+{
+ print "\$a egész típus";
+}
+else
+{
+ print "\$a nem egész típus";
+}
+
+*/
+
+// print is_integer($a);
+
+/*
+$a="Jakab";
+print "Hello $a<br />";
+$b=5;
+$c=6;
+print "$b*$c<br />";
+print $b*$c; print "<br />";
+print $b*$c."<br />";
+print "\$b*\$c=".$b*$c."<br />";
+print '$b*$c='.$b*$c.'<br />';
+print 'Hello $a<br />';
+var_dump($a);
+*/
+?>
+
+<?php
+    $a=5413;
+    $b=11;
+    $c = (int) ($a/$b);
+    $m = $a-$c*$b; /*maradék*/
+    print "$a/$b=$c - maradék: $m";
+    /*Maradékos osztás operátora: %*/
+    print "<br />";
+    print $a%$b;
+    print "<br />";
+
+    /* Egy szám páros-e? */
+    $szam=6;
+    if($szam%2){
+        print "$szam páratlan.";
+    } else{
+        print "$szam páros.";
+    }
+
+
+    print "<br />";
+    /* Egy szám páros és 7-tel osztható-e? */
+    $szam=35;
+    if($szam%2 || $szam%7){
+        print "Hamis.";
+    } else{
+        print "Igaz.";
+    }
+
+    print "<br />";
+    $szam=5.0;
+    if($szam===5)
+        print "Igaz";
+
+    $a=5;
+    $b=5;
+
+    if($a==$b && gettype($a)==gettype($b)){
+        print "Egyenlõ.";
+    }
+
+    print "<br />";
+    $veznev="Gipsz";
+    $kernev="Jakab";
+    $nev=$veznev." ".$kernev;
+    print $nev;
+
+
+    print "<br />";
+    $a=127;
+    if($a >=1000 && $a <= 9999)
+        print "Ok, négy számjegyû.";
+    else
+        print "Nem négy számjegyû!";
+
+    if($a<10)
+        $a="000".$a;
+    elseif($a<100)
+        $a="00".$a;
+    elseif($a<1000)
+        $a="0".$a;
+
+    print "<br />".$a;
+?>

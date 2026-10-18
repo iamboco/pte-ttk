@@ -1,0 +1,24 @@
+﻿<meta charset="utf-8">
+
+<?php
+
+function dblogin(){
+$host="localhost";
+$user="user";
+$pass="pass";
+$dbname="user";
+$port="5432";
+$connect=pg_connect('host=\''.$host.'\' user=\''.$user.'\' password=\''.$pass.
+'\' dbname=\''.$dbname.'\' port=\''.$port.'\'');
+return($connect);
+}
+
+$connect=dblogin();
+$sql="DELETE FROM penz WHERE kod='".$_GET["kod"]."';";
+$query=pg_exec($connect,$sql);
+print "Törlés kész.";
+
+?>
+
+<br />
+<a href="penzadmin.php">Vissza</a> 

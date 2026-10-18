@@ -1,0 +1,150 @@
+<?php
+print '<meta charset="utf-8"><form name="urlap" method="post" action="">';
+for ($i=1;$i<=5;$i++)
+ print "$i. szám: <input name=\"szam$i\" type=\"text\"><br />";
+print '<input name="oke" type="submit" value="mehet">';
+print '</form>';
+if (isset($_POST["oke"]))
+{
+ for ($i=1;$i<=90;$i++)
+  $szamok[]=$i;
+ $i=0;
+ $tipp[]=$_POST["szam1"];
+ $tipp[]=$_POST["szam2"];
+ $tipp[]=$_POST["szam3"];
+ $tipp[]=$_POST["szam4"];
+ $tipp[]=$_POST["szam5"];
+ $tipp=array_unique($tipp);
+ if(count($tipp)===5){
+  foreach($tipp as $ertek)
+   if(array_search($ertek, $szamok)!==false) $i++;
+ }
+ if($i==5) print "Jó.";
+}
+
+// 5 elemet raktunk a tipp tömbbe, az array_unique kiszedte az azonosokat, ha így is 5
+// marad, akkor végignéztük, hogy az elemek a szamok tömb elemei közt voltak-e
+
+// fontos különbséget tenni a false és a 0 közt <-- a megadott 0 és a meg nem adott érték
+// megkülönböztetésére
+
+/*
+print '<meta charset="utf-8"><form name="urlap" method="post" action="">';
+for ($i=1;$i<=5;$i++)
+ print "$i. szám: <input name=\"szam$i\" type=\"text\"><br />";
+print '<input name="oke" type="submit" value="mehet">';
+print '</form>';
+if (isset($_POST["oke"]))
+{
+ for ($i=1;$i<=90;$i++)
+  $szamok[$i]=$i;
+ $i=0;
+
+ $a=$_POST["szam1"];
+ $b=$_POST["szam2"];
+ $c=$_POST["szam3"];
+ $d=$_POST["szam4"];
+ $e=$_POST["szam5"];
+
+ if (!(($a==$b || $a==$c || $a==$d || $a==$e) || ($b==$c || $b==$d ||
+      $b==$e) || ($c==$d || $c==$e) || ($d==$e)))
+ {
+  foreach($szamok as $ertek)
+   for ($j=1;$j<=5;$j++)
+    if ($_POST["szam$j"]==$ertek) $i++;
+  if ($i==5) print "jó";
+ }
+}
+*/
+
+/*
+$szamok[5]=23;
+$szamok[43]=13;
+$szamok[2]=2;
+$szamok[7]=3;
+krsort($szamok);
+*/
+
+/*
+for ($i=0;$i<100;$i++)
+ $szamok[]=rand(1,100);
+
+print "<pre>";
+print_r($szamok);
+print "</pre>";
+//sort($szamok);
+rsort($szamok);
+//asort($szamok);
+//arsort($szamok);
+*/
+
+/*
+$szamok=array_fill(0,100,0);
+*/
+
+/*
+for ($i=0;$i<100;$i++)
+ $szamok[]=0;
+*/
+
+/*
+$szamok = array(
+ array(1,2,3,4,5),
+ array(6,7,8,9,10),
+ array(11,12,13,14,15)
+);
+print $szamok[1][3];
+foreach ($szamok as $ertek)
+ foreach ($ertek as $artek)
+  print "$artek<br />";
+*/
+
+/*
+$szamok = array("a" => 1, "b" => 2, "c" => 3);
+print $szamok["a"];
+$szamok["d"]=4;
+$kulcs="c";
+print $szamok["$kulcs"];
+
+foreach($szamok as $kulcs => $ertek)
+ print "$kulcs: $ertek<br />";
+*/
+
+/*
+$szamok = array(1,2,3,4,5);
+$szamok[10]=8;
+foreach ($szamok as &$ertek)
+{
+ print $ertek."<br />";
+ $ertek=0;
+}
+*/
+
+
+/*
+$szamok = array(1,2,3,4,5);
+$szamok[10]=8;
+foreach ($szamok as $ertek)
+{
+ print $ertek."<br />";
+ $ertek=0;
+}
+*/
+
+/*
+$szamok = array(1,2,3,4,5);
+//print $szamok[4];
+$szamok[]=6;
+$szamok[1]=7;
+$szamok[10]=8;
+
+for ($i=0;$i<count($szamok);$i++)
+ print $szamok[$i]."<br />";
+*/
+
+/*
+print "<pre>";
+print_r($szamok);
+print "</pre>";
+*/
+?>

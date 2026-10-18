@@ -1,0 +1,32 @@
+<?php
+
+
+print '<form name="urlap" action="" method="post">';
+print '<input type="text" name="szov" value="">';
+print '<input type="submit" name="ok" value="OK">';
+print '</form>';
+
+function szur($szov, $parancs){
+    $nemszam=array();
+    $szam=array();
+    for($i=0; $i<strlen($szov); ++$i){
+        if($szov[$i]=='1' || $szov[$i]=='2' || $szov[$i]=='3' || $szov[$i]=='4' || $szov[$i]=='5' || $szov[$i]=='6' || $szov[$i]=='7' || $szov[$i]=='8' || $szov[$i]=='9')
+            $szam[]=$szov[$i];
+        else $nemszam[]=$szov[$i];
+    }
+
+    $nemsz=implode($nemszam);
+    $sz=implode($szam);
+
+    if($parancs==1) return $nemsz; else return $sz;
+}
+
+if(isset($_POST["ok"])){
+    print "Szoveg: ";
+    print szur($_POST["szov"],1);
+    print "<br />Szamok: ";
+    print szur($_POST["szov"],2);
+}
+
+
+?>

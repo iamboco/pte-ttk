@@ -1,0 +1,30 @@
+Gyakorló feladatok a 2. zárthelyi dolgozatra:
+
+Megadott egészeket tartalmazó mátrixra vonatkozóan: (A mátrix tárolása vector<vector<int> > felhasználásával történjen)
+
+1. Az összes csupa 0 sor sorszámának kiíratása. (A megfelelõ sorok indexét vector<int>-ben tárolja, ennek elemeit írassa ki.)
+2. Azon sorok sorszámának kiíratása, amelyekben az elemek összege páros/páratlan. (A megfelelõ sorok indexét vector<int>-ben tárolja, ennek elemeit írassa ki.)
+3. Azon sor(ok) sorszámának kiíratása, amelyben az elemek összege maximális/minimális. (A megfelelõ sorok indexét vector<int>-ben tárolja, ennek elemeit írassa ki.)
+4. Azon sorok sorszámának kiíratása, amelyben az elemek szorzata páros/páratlan. (A megfelelõ sorok indexét vector<int>-ben tárolja, ennek elemeit írassa ki.)
+5.-8.: Ua, mint fent csak sorok helyett oszlopok.
+
+Oldja meg az 1.-8. feladatokat úgy, hogy a matrixot iterátorral jár be!
+
+
+Írjon függvényt, amely adott egészeket tartalmazó mátrixra a következõt teszi:
+
+9. elõállítja a mátrix transzponáltját
+10. az i-edik sorát megcseréli a j-edik sorával
+11. az i-edik sorához hozzáadja a j-edik sorának k-szorosát
+12. páros indexû sorainak elemeinek sorrendjét megfordítja
+
+A 9-12. feladatokat írja meg oszlopokra vonatkozóan is.
+A 9-12. feladatokat oldja meg úgy, hogy a függvények az eredeti mátrixot módosítják és void-dal térnek vissza, és oldja meg úgy is, hogy a függvények az eredeti mátrixot változatlanul hagyják és egy megfelelõ új mátrixszal térnek vissza.
+
+
+13. Irjon függvényt, amely egy egészeket tároló vector átmérõjét (legnagyobb elemének és legkisebb elemének különbségét) számolja ki. Sabolonosítsa (template!) az iménti függvényt, hogy double, char, racionalis típusokra is mûködjön.
+
+
+A fenti feladatok mindegyikéhez írjon  main() függvényt ill. programot, amelyben a függvényeket hívja és a kapott eredményeket megjeleníti.
+
+

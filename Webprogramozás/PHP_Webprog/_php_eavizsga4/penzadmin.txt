@@ -1,0 +1,117 @@
+﻿<meta charset="utf-8">
+
+<?php
+
+function dblogin(){
+$host="localhost";
+$user="user";
+$pass="pass";
+$dbname="user";
+$port="5432";
+$connect=pg_connect('host=\''.$host.'\' user=\''.$user.'\' password=\''.$pass.
+'\' dbname=\''.$dbname.'\' port=\''.$port.'\'');
+return($connect);
+}
+
+session_start();
+    if(isset($_SESSION["level"]) && $_SESSION["level"]==1){
+        print "Admin oldal, belépve mint: ".$_SESSION["user"]."<br />";
+        print "<a href=\"index.php\">Bejelentkezés más felhasználóként</a>";
+    }
+?>
+
+<br /><br /><br /><br /><table border="1">
+<tr border="1"><td border="1">Pénznem kód</td><td border="1" colspan="2">Árfolyamok</td>
+<td border="1">Egyenleg</td><td border="1" colspan="3">Opciók</td></tr>
+<tr border="1"><td border="1"></td><td border="1">Vételi</td><td border="1">Eladási</td><td border="1"></td>
+<td border="1">Felvétel/kiadás</td><td border="1">Módosítás</td><td border="1">Törlés</td></tr>
+
+<?php
+$connect=dblogin();
+$sql="SELECT * FROM penz ORDER BY kod ASC;";
+$query=pg_exec($connect,$sql);
+  if (pg_num_rows($query)>0){
+     for($i=0; $i<pg_num_rows($query); $i++){
+        print '<tr>';
+        print '<td>';
+        print pg_result($query,$i,0);
+        print '</td>';
+        print '<td>';
+        print pg_result($query,$i,1);
+        print '</td>';
+        print '<td>';
+        print pg_result($query,$i,2);
+        print '</td>';
+        print '<td>';
+        print pg_result($query,$i,3);
+        print '</td>';
+        print '<td>';
+        print '<a href="felvkiad.php?kod='.pg_result($query,$i,0).'">Felvétel/Kiadás</a>';
+        print '</td>';
+        print '<td>';
+        print '<a href="mod.php?kod='.pg_result($query,$i,0).'">Árf.módosítás</a>';
+        print '</td>';
+        print '<td>';
+        print '<a href="torol.php?kod='.pg_result($query,$i,0).'">Törlés</a>';
+        print '</td>';
+        print '</tr>';
+    }
+  }
+?>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                       </table>
+<br /><br /><br />Új pénznem felvitele:<br />
+<form name="ujpenz" method="post" action="">
+Kód(3 betű!): <input type="text" name="kod" maxlength="3" size="3"><br />
+Kezdő vételi árfolyam: <input type="text" name="veteli" maxlength="10" size="15"><br />
+Kezdő eladási árfolyam: <input type="text" name="eladasi" maxlength="10" size="15"><br />
+<input type="submit" name="oke" value="Kész">
+</form>
+
+<?php
+
+if(isset($_POST["oke"])){
+   if(isset($_POST["kod"]) && isset($_POST["veteli"]) && isset($_POST["eladasi"])){
+        if(strlen($_POST["kod"])==3 && is_numeric($_POST["veteli"]) && is_numeric($_POST["eladasi"])){
+           $connect=dblogin();
+           $sql="SELECT * FROM penz WHERE kod='".$_POST["kod"]."';";
+           $query=pg_exec($connect,$sql);
+            if (pg_num_rows($query)===0){
+               $sql="INSERT INTO penz VALUES ('".$_POST["kod"]."',".$_POST["veteli"].",".$_POST["eladasi"].",0)";
+               pg_exec($connect,$sql);
+            } else print "Már létezik ilyen pénznem!";
+        } else print "Hibás adat(ok)!";
+    } else print "Hiányzó adat(ok)!";
+}
+
+?>
+
+<br /><br /><br />Pénzváltási összeg lekérdezése:<br />
+<form name="penzvossz" method="post" action="">
+Kód(3 betű!): <input type="text" name="lekkod" maxlength="3" size="3"><br />
+Árfolyam: <select name="arf">
+<option value="vet">Vételi</option>
+<option value="ela">Eladási</option>
+</select><br />
+Összeg: <input type="text" name="lekosszeg" maxlength="10" size="15"><br />
+<input type="submit" name="lekoke" value="Lekérdezés">
+</form>
+
+<?php
+
+if(isset($_POST["lekoke"])){
+    if(isset($_POST["lekkod"]) && isset($_POST["lekosszeg"])){
+        if(strlen($_POST["lekkod"])==3 && is_numeric($_POST["lekosszeg"])){
+            $connect=dblogin();
+            $sql="SELECT * FROM penz WHERE kod='".$_POST["lekkod"]."';";
+            $query=pg_exec($connect,$sql);
+            if (pg_num_rows($query)!=0){
+                if ($_POST["arf"]=="vet") $szorzo=pg_result($query,0,1);
+                    else $szorzo=pg_result($query,0,2);
+                print $_POST["lekosszeg"] * $szorzo;
+                print " Ft.";
+            } else print "Nem létezik ilyen pénznem!";
+        } else print "Hibás adat(ok)!";
+    } else print "Hiányzó adat(ok)!";
+}
+
+?>

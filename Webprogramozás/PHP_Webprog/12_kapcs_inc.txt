@@ -1,0 +1,14 @@
+<?php
+
+function dblogin(){
+    $host="localhost";
+    $user="asti";
+    $pass="asdacxynbv342sdf_3r2we";
+    $dbname="asti";
+    $port="5432";
+    $connect=pg_connect('host=\''.$host.'\' user=\''.$user.'\' password=\''.$pass.
+     '\' dbname=\''.$dbname.'\' port=\''.$port.'\'');
+    return($connect);
+}
+
+?>

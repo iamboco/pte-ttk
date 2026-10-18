@@ -1,0 +1,32 @@
+<!-- GET helyett POST ==> nem látszik az URL-ben -->
+
+<form name="urlap" method="post" action="">
+<table>
+<tr><td>Login:</td><td><input type="text" name="user" maxlength="10" size="8"></td></tr>
+<tr><td>Password: </td><td><input type="password" name="password" maxlength="10" size="5"></td></tr>
+<tr><td align="center" colspan="2"><input type="submit" name="oke" value="Belepes"></tr></tr>
+</table>
+</form>
+
+<?php
+if(isset($_POST["oke"])){
+    require_once("tizenkettedik_kapcs.inc.php");
+    $connect=dblogin();
+    $sql="SELECT * FROM users WHERE username='".trim($_POST["user"])."'";
+
+    $query=pg_exec($connect,$sql);
+    if(pg_num_rows($query)===1 &&
+     pg_result($query,0,2)===md5($_POST["password"])){
+        // 0.sor 2-es mezõjét vette ki a pg_result
+        print "Sikeres belepes <br />";
+        if(pg_result($query,0,1)==="0")
+            print "<a href=\"tizenkettedik_admin.php\">Admin oldal</a><br />";
+        print "<a href=\"tizenkettedik_user.php\">User oldal</a><br />";
+        print "<a href=\"tizenkettedik_logout.php\">Kijelentkezes</a>";
+        session_start();
+        $_SESSION["user"]=pg_result($query,0,0);
+        $_SESSION["level"]=pg_result($query,0,1);
+    }
+}
+
+?>

@@ -1,0 +1,23 @@
+<meta charset="utf-8">
+<?php
+print '<form name="urlap" action="" method="post">';
+print '<input type="text" name="szoveg" value="">';
+print '<input type="submit" name="oke" value="OK">';
+print '</form>';
+
+if(isset($_POST["oke"]) && mb_strlen($_POST["szoveg"])){
+    mb_internal_encoding("utf-8");
+    $szo=$_POST["szoveg"];
+    $ek  = "αινσφυϊόϋΑΙΝΣΦΥΪάΫ";
+    $ekn = "aeiooouuuAEIOOOUUU";
+
+    for($i=0; $i<mb_strlen($szo); $i++){
+        for($j=0; $j<mb_strlen($ek); ++$j){
+            if(mb_substr($szo,$i,1,"utf-8") == mb_substr($ek,$j,1,"utf-8")){
+                $szo=mb_substr($szo,0,$i,"utf-8").mb_substr($ekn,$j,1,"utf-8").mb_substr($szo,$i+1,mb_strlen($szo)-$i-1,"utf-8");
+            }
+        }
+    }
+    print "Eredeti: ".$_POST["szoveg"]."<br />Modositott: ".$szo."<br />";
+}
+?>

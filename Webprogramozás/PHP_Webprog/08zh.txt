@@ -1,0 +1,29 @@
+<?php
+
+print '<form name="urlap" action="" method="post">';
+print '<input type="text" name="str1" value="">';
+print '<input type="text" name="str2" value="">';
+print '<input type="submit" name="oke" value="OK">';
+print '</form>';
+
+function osszefes($szt1, $szt2){
+    if(mb_strlen($szt1) != mb_strlen($szt2)){
+        return "Nem azonos hosszu stringek!";
+    } else if(mb_strlen($szt1)==0){
+        print "Ures bemenet!";
+    } else {
+        $osszef;
+        for($i=0; $i<mb_strlen($_POST["str1"]); ++$i){
+            $osszef[]=$_POST["str1"][$i];
+            $osszef[]=$_POST["str2"][$i];
+        }
+        $osszef=implode($osszef);
+        return $osszef;
+    }
+}
+
+if(isset($_POST["oke"])){
+    print osszefes($_POST["str1"], $_POST["str2"]);
+}
+
+?>

@@ -1,0 +1,77 @@
+<?php
+header("Content-type: image/png");
+
+/*
+A /home/~c-ta/public_html/otos.txt fájl az ötöslottó 1957 és 2008 közti nyerõszámait tartalmazza.
+Minden sorban az elsõ szám a sorsolás évét, a második pedig az éven belüli sorsolási hetet jelenti,
+melyet az öt nyerõszám követ. Ábrázolja oszlopdiagramon, hogy eddig melyik számot hányszor húzták ki.
+
+(Ilyen:
+"1957;13;7;9;19;42;66"
+"1957;12;8;12;24;26;85"
+"1957;11;1;49;64;67;71"
+"1957;10;16;61;71;77;89"
+)
+*/
+
+$kep = imagecreate(1600,900);
+$feher=imagecolorallocate($kep,255,255,255);
+$kek=imagecolorallocate($kep,0,0,255);
+$piros=imagecolorallocate($kep,255,0,0);
+
+
+$filename="otos.txt";
+if(file_exists($filename) && is_file($filename) && is_readable($filename)){
+    $handle=fopen($filename,"r");
+    $huzasok = array();
+    $szamok = array();
+    for($i=0; $i<91; ++$i)
+        $szamok[]=0;
+
+    while(!feof($handle)){
+        $sor = fgets($handle);
+        $sor = trim($sor,'"');
+        $huzasok = explode(";",$sor);
+        $huzasok[6] = substr($huzasok[6],0,2);
+        /*
+        if($huzasok[0]<1958) {
+          print $huzasok[0].".ev ".$huzasok[1].".huzas:<br />";
+          for($i=0; $i<5; ++$i)
+            print ($huzasok[$i+2])."++ ";
+          print "<br />";
+        }
+        */
+        for($i=0; $i<5; ++$i)
+            ++$szamok[$huzasok[$i+2]];
+
+    }
+    fclose($handle);
+
+    /*
+    for($i=1; $i<91; ++$i)
+        print ($i).".: ".$szamok[$i]."<br />";
+    */
+}
+
+
+
+$o_szelesseg=5;        // oszlopszélesség
+$o_koz=10;               // oszlopok közti távolság
+for($i=1; $i<91; ++$i){
+    if($i%2) $oszlopszin=$piros; else $oszlopszin=$kek;
+    imagefilledrectangle($kep,
+     50 + $i*$o_szelesseg + $i*$o_koz,
+     300,
+     50 + $i*$o_szelesseg + $i*$o_koz + $o_szelesseg,
+     300 - $szamok[$i],
+     $oszlopszin);
+    imagestring($kep, 1, 50 + $i*$o_szelesseg + $i*$o_koz, 300,
+     $szamok[$i], $oszlopszin);
+    imagestring($kep, 2, 50 + $i*$o_szelesseg + $i*$o_koz, 310,
+     $i, $oszlopszin);
+}
+
+imagepng($kep);
+imagedestroy($kep);
+
+?>

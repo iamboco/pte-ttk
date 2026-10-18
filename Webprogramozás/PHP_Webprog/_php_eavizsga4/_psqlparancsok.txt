@@ -1,0 +1,6 @@
+psql
+CREATE TABLE users (username varchar(15) PRIMARY KEY, password char(32));
+INSERT INTO users VALUES ('admin',md5('admin123'));
+CREATE TABLE penz (kod varchar(3) PRIMARY KEY, veteli numeric, eladasi
+numeric, egyenleg numeric);
+\q 

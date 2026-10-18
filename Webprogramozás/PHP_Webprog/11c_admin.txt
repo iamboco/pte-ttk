@@ -1,0 +1,46 @@
+
+<?php
+session_start();
+if(isset($_SESSION["level"]) && $_SESSION["level"]==0){
+    print "admin oldal<br />";
+    print "<a href=\"tizenegyedikc_logout.php\">Logout</a>";
+    $filename="tizenegyedikc_jelszo.txt";
+?>
+
+<form name="urlap" method="post" action="">
+<table>
+<tr><td>Login:</td><td><input type="text" name="user" maxlength="10" size="8"></td></tr>
+<tr><td>Password: </td><td><input type="password" name="password" maxlength="10" size="5"></td></tr>
+<tr><td>
+<select name="level">
+    <option value="1">User</option>
+    <option value="0">Admin</option>
+</select>
+</tr></td>
+<tr><td align="center" colspan="2"><input type="submit" name="oke" value="Felvitel"></tr></tr>
+</table>
+</form>
+
+<?php
+    if(isset($_POST["oke"])){
+        $handle=fopen($filename,"a");
+        fwrite($handle,trim($_POST["user"]).";".$_POST["level"].";".$_POST["password"]."\n");
+        fclose($handle);
+    }
+    // jó csak rossz a permission
+
+
+    $handle=fopen($filename,"r");
+    print "<table>";
+    while(!feof($handle)){
+        $sor=trim(fgets($handle));
+        if($sor!=""){
+            $tomb=explode(";",$sor);
+            print "<tr><td>$tomb[0]</td><td>$tomb[1]</td><td>tomb[2]</td></tr>";
+        }
+    }
+    print "</table>";
+    fclose($handle);
+}else
+    header("Location: tizenegyedikc_login.php");
+?>

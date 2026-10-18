@@ -1,0 +1,45 @@
+strlen($a);			// sztring hossza
+
+	for($i=0; $i<strlen($a); $i++)
+        	print $a["$i"];
+
+mb_strlen($a,"utf-8");		// -,,- kar.kódolás megadásával
+str_shuffle($a);		// sztring betûinek megkeverése
+mb_substr($a,1,2,"utf-8");	// részstring(string, hányadiktól, [milyen hosszan], [kódolás])
+mb_strpos($a,"o")		// vagy false-zal tér vissza v a paraméterkarakter pozíciójával
+mb_stripos($a,"o");		// u.ez nem case-sensitive módban
+mb_strrpos($a,"o");		// vége felõl adja az elsõ elõfordulást
+mb_strripos($a,"o");		// u.ez nem case-sensitive módban
+
+mb_strstr($_POST["sz1"],$_POST["sz2"]);
+	// sz2 elsõ elõfordulását adja sz1-ben
+
+trim(mb_strstr($_POST["sz1"],$_POST["sz2"]));
+	// kiveszi a nem nyomtatható karaktereket (balról+jobbról)
+
+print trim(mb_strstr($_POST["sz1"],$_POST["sz2"]),"n ej6");
+	// adott sztringet vesz ki (balról+jobbról)
+
+// ltrim() - csak balról u.ez
+// rtrim() - csak jobbról u.ez
+
+
+strip_tags( mb_substr( $_POST["nev"],mb_strpos($_POST["nev"], " ") ) );
+	// tagektõl megtisztítja pl. a beviteli mezõt (itt a nev mezõ szóköz utáni részét)
+
+strip_tags(mb_substr($_POST["nev"],mb_strpos($_POST["nev"], " ")),"<b><i><u>");
+	// u.ez, de csak a szövegformázó tageket engedélyezi
+
+substr_replace($a, $_POST["nev"],6);
+	// sztringrész-csere adott pozíciótól
+str_replace("világ", $_POST["nev2"], $a, $i);
+	// mit cseréljen, mire, miben, $i-be pedig a megtörtént cserék száma kerül
+
+strtoupper($_POST["sz1"]);        // nagybetûssé alakít
+strtolower($_POST["sz1"]);        // kisbetûssé alakít
+ucwords($_POST["sz1"]);           // minden kezdõbetût naggyá konvertál
+
+$tomb=explode(" ",$_POST["sz1"]);
+	// sztring "szétrobbantása" tömbbé adott karakter mentén
+
+$string = mb_ereg_replace( "^($encoded_char_list)*", "", $string );	// Unicode karakterek kivétele

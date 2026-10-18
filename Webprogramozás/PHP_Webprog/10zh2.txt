@@ -1,0 +1,35 @@
+<?php
+header("Content-type: image/png");
+
+$kep = imagecreate(500,800);
+$feher=imagecolorallocate($kep,255,255,255);
+$fekete=imagecolorallocate($kep,0,0,0);
+$piros=imagecolorallocate($kep,255,0,0);
+
+imageellipse($kep,250,400,300,300,$fekete);
+imagefilledellipse($kep,200,130,20,20,$fekete);
+imagefilledellipse($kep,300,130,20,20,$fekete);
+
+imagefilledellipse($kep,250,160,30,30,$piros);
+imageline($kep,250,145,200,175,$piros);
+imageline($kep,200,175,250,175,$piros);
+imagefill($kep,220,170,$piros);
+
+
+imagefilledellipse($kep,200,190,20,20,$fekete);
+imagefilledellipse($kep,220,210,20,20,$fekete);
+imagefilledellipse($kep,240,220,20,20,$fekete);
+imagefilledellipse($kep,260,220,20,20,$fekete);
+imagefilledellipse($kep,280,210,20,20,$fekete);
+imagefilledellipse($kep,300,190,20,20,$fekete);
+
+
+imageellipse($kep,105,300,50,50,$fekete);
+imageellipse($kep,395,300,50,50,$fekete);
+imageellipse($kep,250,150,200,200,$fekete);
+
+
+imagepng($kep);
+imagedestroy($kep);
+
+?>

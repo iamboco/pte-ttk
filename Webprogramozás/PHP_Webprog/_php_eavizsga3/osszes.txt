@@ -1,0 +1,217 @@
+﻿index.php
+
+
+<meta charset="utf-8">
+
+<form name="urlap" method="post" action="">
+<table>
+<tr><td>Login:</td><td><input type="text" name="user" maxlength="10" size="10"></td></tr>
+<tr><td>Password: </td><td><input type="password" name="password" maxlength="10" size="10"></td></tr>
+<tr><td align="center" colspan="2"><input type="submit" name="oke" value="Belépés"></tr></tr>
+</table>
+</form>
+<br /><br />Új felhasználó:<br />
+<form name="urlap2" method="post" action="">
+<table>
+<tr><td>Login:</td><td><input type="text" name="useruj" maxlength="10" size="10"></td></tr>
+<tr><td>Password: </td><td><input type="password" name="passworduj" maxlength="10" size="10"></td></tr>
+<tr><td>Password megint: </td><td><input type="password" name="passworduj2" maxlength="10" size="10"></td></tr>
+<tr><td align="center" colspan="2"><input type="submit" name="okeuj" value="Létrehozás"></tr></tr>
+</table>
+</form>
+
+<?php
+
+function dblogin(){
+$host="localhost";
+$user="user";
+$pass="pass";
+$dbname="user";
+$port="5432";
+$connect=pg_connect('host=\''.$host.'\' user=\''.$user.'\' password=\''.$pass.'\' dbname=\''.$dbname.'\' port=\''.$port.'\'');
+return($connect);
+}
+
+mb_internal_encoding("utf-8");
+
+if(isset($_POST["oke"])){
+    $connect=dblogin();
+    $sql="SELECT * FROM users WHERE username='".trim($_POST["user"])."'";
+    $query=pg_exec($connect,$sql);
+    if(pg_num_rows($query)===1) {
+        if(pg_result($query,0,1)===md5($_POST["password"])){
+            print "Belépve.<br />";
+            print "<a href=\"kezeles.php\">Eseménykezelés</a><br />";
+            session_start();
+            $_SESSION["user"]=pg_result($query,0,0);
+        } else print "Hibás jelszó!";
+    } else print "Nem létező felhasználónév!";
+} else if(isset($_POST["okeuj"])){
+    if(isset($_POST["useruj"]) && isset($_POST["passworduj"]) && isset($_POST["passworduj2"])){
+        if($_POST["passworduj"] == $_POST["passworduj2"]){
+            $connect=dblogin();
+            $sql="SELECT * FROM users WHERE username='".trim($_POST["useruj"])."'";
+            $query=pg_exec($connect,$sql);
+            if(pg_num_rows($query)===0){
+                $sql="INSERT INTO users VALUES('".trim($_POST["useruj"])."','".md5(trim($_POST["passworduj"]))."');";
+                print "Új felhasználó felvéve.<br />";
+                $query=pg_exec($connect,$sql);
+            } else print "Már létező felhasználónév!";
+        } else print "A két megadott jelszó nem egyezik!";
+    } else print "Kitöltetlen adatok!";
+
+}
+
+?>
+
+
+kezeles.php
+
+
+
+
+<meta charset="utf-8">
+
+<?php
+function dblogin(){
+$host="localhost";
+$user="user";
+$pass="pass";
+$dbname="user";
+$port="5432";
+$connect=pg_connect('host=\''.$host.'\' user=\''.$user.'\' password=\''.$pass.'\' dbname=\''.$dbname.'\' port=\''.$port.'\'');
+return($connect);
+}
+
+session_start();
+$login=$_SESSION["user"];
+
+print "Új adat felvétele:";
+print '<form name="urlap" method="post" action="">';
+print '<table>';
+
+print '<tr><td>Leírás:</td><td><input type="text" name="leiras" maxlength="200" size="10"></td></tr>';
+print '<tr><td>Helyszín:</td><td><input type="text" name="helyszin" maxlength="200" size="10"></td></tr>';
+print '<tr><td>Év:</td><td><input type="text" name="ev" maxlength="4" size="4"></td>';
+print '<td>Hó:</td><td><input type="text" name="ho" maxlength="2" size="2"></td>';
+print '<td>Nap:</td><td><input type="text" name="nap" maxlength="2" size="2"></td></tr>';
+print '<tr><td>Kezdés:</td><td><input type="text" name="kora" maxlength="2" size="2"> óra</td>';
+print '<td><input type="text" name="kperc" maxlength="2" size="2"> perc</td></tr>';
+print '<tr><td>Vége:</td><td><input type="text" name="vora" maxlength="2" size="2"> óra</td>';
+print '<td><input type="text" name="vperc" maxlength="2" size="2"> perc</td></tr>';
+
+print '<tr><td align="center" colspan="2"><input type="submit" name="felv" value="Felvétel"></tr></tr>';
+print '</table>';
+print '</form>';
+
+if(isset($_POST["felv"])){
+    if(isset($_POST["leiras"]) && isset($_POST["helyszin"]) && isset($_POST["ev"]) && isset($_POST["ho"]) &&
+    isset($_POST["nap"]) && isset($_POST["kora"]) && isset($_POST["kperc"]) &&
+    isset($_POST["vora"]) && isset($_POST["vperc"])){
+      if(is_numeric($_POST["ev"]) && is_numeric($_POST["ho"]) && is_numeric($_POST["nap"]) && is_numeric($_POST["kora"]) &&
+      is_numeric($_POST["kperc"]) && is_numeric($_POST["vora"]) && is_numeric($_POST["vperc"]) && $_POST["nap"]>0 && $_POST["nap"]<=31 &&
+      $_POST["ho"]>0 && $_POST["ho"]<13 && $_POST["kora"]>=0 && $_POST["kora"]<24 && $_POST["kperc"]>=0 && $_POST["kperc"]<60 &&
+      $_POST["vora"]>=0 && $_POST["vora"]<24 && $_POST["vperc"]>=0 && $_POST["vperc"]<60 ){
+        if($_POST["kora"] > $_POST["vora"]) print "A kezdeti időpont későbbre esik a végidőpontnál!";
+        else if(($_POST["kora"] == $_POST["vora"]) && $_POST["kperc"] > $_POST["vperc"]) print "A kezdeti időpont későbbre esik a végidőpontnál!";
+        else {
+            $connect=dblogin();
+            $sql="INSERT INTO logs VALUES('".$login."','".$_POST["leiras"]."','".$_POST["helyszin"]."','".$_POST["ev"]."','".$_POST["ho"]."','".$_POST["nap"]."','".
+            $_POST["kora"]."','".$_POST["kperc"]."','".$_POST["vora"]."','".$_POST["vperc"]."');";
+            $query=pg_exec($connect,$sql);
+            print "Adat rögzítve.<br />";
+        }
+      }else print "Hibás/hiányzó adat(ok)!";
+    } else print "Hiányzó adat(ok)!";
+}
+
+print "<br /><br />";
+print "Mai események:<br />";
+date_default_timezone_set("Europe/Budapest");
+$today = getdate();
+$ev=$today["year"];
+$ho=$today["mon"];
+if(strlen($ho)==1) $ho="0".$ho;
+$nap=$today["mday"];
+if(strlen($nap)==1) $nap="0".$nap;
+$connect=dblogin();
+$sql="SELECT * FROM logs WHERE username='".$login."' AND ev='".$ev."' AND ho='".$ho."' AND nap='".$nap."';";
+$query=pg_exec($connect,$sql);
+if(pg_num_rows($query)>0){
+    print '<table border="1">';
+    for($i=0; $i<pg_num_rows($query); $i++){
+        print "<tr>";
+        print "<td>".pg_result($query,$i,1)."</td>";
+        print "<td>Helyszín: ".pg_result($query,$i,2)."</td>";
+        print "<td>Kezdés: ".pg_result($query,$i,6).":".pg_result($query,$i,7)."</td>";
+        print "<td>Vége: ".pg_result($query,$i,8).":".pg_result($query,$i,9)."</td>";
+        print "<td><a href=\"torol.php?user=".$login."&l=".pg_result($query,$i,'leiras')."&h=".pg_result($query,$i,'helyszin').
+         "&y=".pg_result($query,$i,'ev')."&m=".pg_result($query,$i,'ho')."&d=".pg_result($query,$i,'nap')."\"> Töröl </a> </td>";
+        print "</tr>";
+    }
+    print "</table><br /><br />";
+}
+
+print 'Napi események listázása:<br />';
+print '<form name="naplistform" method="post" action="">';
+print '<table>';
+print '<tr><td>Dátum(év/hó/nap):</td>';
+print '<td><input type="text" name="listev" maxlength="4" size="4"></td>';
+print '<td><input type="text" name="listho" maxlength="2" size="2"></td>';
+print '<td><input type="text" name="listnap" maxlength="2" size="2"></td></tr>';
+print '<tr><td align="center" colspan="2"><input type="submit" name="naplistok" value="Listáz"></tr></tr>';
+print '</table>';
+print '</form>';
+print "<br /><br />";
+
+if(isset($_POST["naplistok"]) && isset($_POST["listev"]) && isset($_POST["listho"]) && isset($_POST["listnap"])){
+    print "Események e napra:<br />";
+    $ev=$_POST["listev"];
+    $ho=$_POST["listho"];
+    $nap=$_POST["listnap"];
+    $connect=dblogin();
+    $sql="SELECT * FROM logs WHERE username='".$login."' AND ev='".$ev."' AND ho='".$ho."' AND nap='".$nap."';";
+    $query=pg_exec($connect,$sql);
+    if(pg_num_rows($query)>0){
+        print '<table border="1">';
+        for($i=0; $i<pg_num_rows($query); $i++){
+            print "<tr>";
+            print "<td>".pg_result($query,$i,1)."</td>";
+            print "<td>Helyszín: ".pg_result($query,$i,2)."</td>";
+            print "<td>Kezdés: ".pg_result($query,$i,6).":".pg_result($query,$i,7)."</td>";
+            print "<td>Vége: ".pg_result($query,$i,8).":".pg_result($query,$i,9)."</td>";
+            print "<td><a href=\"torol.php?user=".$login."&l=".pg_result($query,$i,'leiras')."&h=".pg_result($query,$i,'helyszin').
+             "&y=".pg_result($query,$i,'ev')."&m=".pg_result($query,$i,'ho')."&d=".pg_result($query,$i,'nap')."\"> Töröl </a> </td>";
+
+            print "</tr>";
+        }
+        print "</table>";
+    }
+}
+
+?>
+
+
+torol.php
+
+
+
+<meta charset="utf-8">
+
+<?php
+function dblogin(){
+$host="localhost";
+$user="user";
+$pass="pass";
+$dbname="user";
+$port="5432";
+$connect=pg_connect('host=\''.$host.'\' user=\''.$user.'\' password=\''.$pass.'\' dbname=\''.$dbname.'\' port=\''.$port.'\'');
+return($connect);
+}
+
+$sql="DELETE FROM logs WHERE username='".$_GET["user"]."' AND leiras='".$_GET["l"]."' AND helyszin='".$_GET["h"].
+"' AND ev='".$_GET["y"]."' AND ho='".$_GET["m"]."' AND nap='".$_GET["d"]."';";
+print $sql;
+pg_exec(dblogin(),$sql);
+print "Bejegyzés törölve!<br /><a href=\"kezeles.php\">Vissza</a>";
+?>

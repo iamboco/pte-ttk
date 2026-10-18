@@ -1,0 +1,43 @@
+<form name="urlap" method="post" action="">
+<table>
+<tr><td>Login:</td><td><input type="text" name="user" maxlength="10"
+size="8"></td></tr>
+<tr><td>Password: </td><td><input type="password" name="password"
+maxlength="10" size="5"></td></tr>
+<tr><td align="center" colspan="2"><input type="submit" name="oke"
+value="Belepes"></tr></tr>
+</table>
+</form>
+
+<?php
+
+function dblogin(){
+$host="localhost";
+$user="user";
+$pass="pass";
+$dbname="user";
+$port="5432";
+$connect=pg_connect('host=\''.$host.'\' user=\''.$user.'\' password=\''.$pass.
+'\' dbname=\''.$dbname.'\' port=\''.$port.'\'');
+return($connect);
+}
+
+if(isset($_POST["oke"]) && isset($_POST["user"]) && isset($_POST["password"])){
+session_start();
+session_unset();
+session_destroy();
+
+$connect=dblogin();
+$sql="SELECT * FROM users WHERE username='".trim($_POST["user"])."'";
+
+ $query=pg_exec($connect,$sql);
+ if(pg_num_rows($query)===1 &&
+ pg_result($query,0,1)===md5($_POST["password"])){
+    print "Sikeres belepes <br />";
+    print "<a href=\"penzadmin.php\">Admin oldal</a><br />";
+    session_start();
+    $_SESSION["user"]=pg_result($query,0,0);
+    $_SESSION["level"]=1;
+    }
+}
+?>

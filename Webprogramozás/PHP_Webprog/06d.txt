@@ -1,0 +1,27 @@
+<?php
+
+for($i=1; $i<=90; ++$i)
+    $szamok[] = $i;
+shuffle($szamok);       // tömbelemek összekeverése
+print "<pre>";
+print_r($szamok);
+print "</pre>";
+
+
+for($i=0; $i<50; ++$i){
+    $szamokb[] = rand(1,90);
+    $a=count($szamokb);
+    $szamokb=array_unique($szamokb);
+    if($a>count($szamokb)) --$i;
+}
+foreach($szamokb as $ertek)
+    $szamokc[]=$ertek;
+
+
+print "<pre>";
+print_r($szamokc);
+print "</pre>";
+
+
+
+?>

@@ -1,0 +1,35 @@
+<?php
+
+print '<form name="urlap" action="" method="post">';
+print '<input type="text" name="szam1" value="">';
+print '<input type="submit" name="oke" value="OK">';
+print '</form>';
+
+if(isset($_POST["oke"])){
+    $szam=strtoupper($_POST["szam1"]);
+    $ervenyes=0;
+    for($i=0; $i<strlen($szam); $i++){
+        if(!($szam[$i]=='0' || $szam[$i]=='1' || $szam[$i]=='2' || $szam[$i]=='3' ||
+            $szam[$i]=='4' || $szam[$i]=='5' || $szam[$i]=='6' || $szam[$i]=='7' ||
+            $szam[$i]=='8' || $szam[$i]=='9' || $szam[$i]=='A' || $szam[$i]=='B' ||
+            $szam[$i]=='C' || $szam[$i]=='D' || $szam[$i]=='E' || $szam[$i]=='F'))
+                $ervenyes++;
+    }
+    if($ervenyes==0){
+        $szamdec=0;
+        for($i=0; $i<strlen($szam); $i++){
+            $szamdec*=16;
+            if($szam[$i]>='0' && $szam[$i]<='9')
+                $szamdec+=$szam[$i];
+            else if($szam[$i]=='A') $szamdec+=10;
+            else if($szam[$i]=='B') $szamdec+=11;
+            else if($szam[$i]=='C') $szamdec+=12;
+            else if($szam[$i]=='D') $szamdec+=13;
+            else if($szam[$i]=='E') $szamdec+=14;
+            else if($szam[$i]=='F') $szamdec+=15;
+        }
+        printf("%b",$szamdec);
+    }else print "Nem ervenyes szamot adott meg!";
+}
+
+?>

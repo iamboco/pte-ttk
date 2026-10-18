@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+	
+	<meta charset="UTF-8">
+	
+	<title>Költségek</title>
+    
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+    
+    <meta name="format-detection" content="telephone=no">
+	<meta name="msapplication-tap-highlight" content="no">
+	
+	<link rel="stylesheet" href="src/style.css">
+	<link rel="stylesheet" href="src/resp.css">
+	<link rel="stylesheet" href="src/fontawesome5/css/all.css">
+	
+</head>
+<body>
+	<!--<script>
+		function getTotal(){
+			var array=document.querySelectorAll('.price')
+			var total=0;
+			for(var i=0; i<array.length; i++){
+				if(parseInt(array[i].value)){
+					total+=parseInt(array[i].value);
+				}
+			}
+			document.getElementById('.')
+		}
+	</script> -->
+	<div id="title-bar">
+		<h1>
+			<i class="fas fa-sticky-note"></i>
+			Költségek
+		</h1>
+	</div>
+	
+	<div id="main">
+		<div class="inside">
+
+			<section class="new">
+				
+				<h2>Új költés</h2>
+				
+				<form action="">
+				
+					<div>
+						<label for="type">Megnevezés</label>
+						<select id="type">
+							<option value="0">Élelmiszer</option>
+							<option value="1">Szórakozás</option>
+							<option value="2">Rezsi</option>
+						</select>
+					</div>
+					<div>
+						<label for="price">Költség</label>
+						<input type="number" id="price" value="5000">
+					</div>
+					
+					<button>Hozzáadás</button>
+					
+				</form>
+				
+			</section>
+			
+			<section class="summary">
+				
+				<h2>Összesítés</h2>
+				
+				<div>
+					<h3>Élelmiszer</h3>
+					<p>35000 HUF</p>
+					<h3>Szórakozás</h3>
+					<p>15000 HUF</p>
+					<h3>Rezsi</h3>
+					<p>55000 HUF</p>
+					
+					<a href="" class="clear">Nullázás</a>
+				</div>
+				
+			</section>
+		
+		</div>
+	</div>
+
+	<div id="navigation-bar">
+		<ul>
+			<li>
+				<a href="" title="Új költés">
+					<i class="fas fa-plus-square"></i>
+				</a>
+			</li>
+			<li>
+				<a href="" title="Összesítés">
+					<i class="fas fa-poll-h"></i>
+				</a>
+			</li>
+		</ul>
+	</div>
+
+	<script src="mvc/model.js"></script>
+	<script src="mvc/view.js"></script>
+	<script src="mvc/controller.js"></script>
+	<script src="script.js"></script>
+	
+</body>
+</html>

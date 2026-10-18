@@ -1,0 +1,95 @@
+<?php
+header("Content-type: image/png");
+
+/*
+[1-es] + A legtöbbször kihúzott szám(ok)hoz tartozó oszlopo(ka)t pirossal,
+a legritkábban kihúzott szám(ok)hoz tartozó oszlopo(ka)t pedig zölddel jelölje.
+A többi oszlop kék színû legyen.
+*/
+
+$kep = imagecreate(1600,900);
+$feher=imagecolorallocate($kep,255,255,255);
+$kek=imagecolorallocate($kep,0,0,255);
+$zold=imagecolorallocate($kep,0,255,0);
+$piros=imagecolorallocate($kep,255,0,0);
+
+
+$filename="otos.txt";
+if(file_exists($filename) && is_file($filename) && is_readable($filename)){
+    $handle=fopen($filename,"r");
+    $huzasok = array();
+    $szamok = array();
+    for($i=0; $i<91; ++$i)
+        $szamok[]=0;
+
+    while(!feof($handle)){
+        $sor = fgets($handle);
+        $sor = trim($sor,'"');
+        $huzasok = explode(";",$sor);
+        $huzasok[6] = substr($huzasok[6],0,2);
+        /*
+        if($huzasok[0]<1958) {
+          print $huzasok[0].".ev ".$huzasok[1].".huzas:<br />";
+          for($i=0; $i<5; ++$i)
+            print ($huzasok[$i+2])."++ ";
+          print "<br />";
+        }
+        */
+        for($i=0; $i<5; ++$i)
+            ++$szamok[$huzasok[$i+2]];
+
+    }
+    fclose($handle);
+
+    /*
+    for($i=1; $i<91; ++$i)
+        print ($i).".: ".$szamok[$i]."<br />";
+    */
+
+    $lt=$szamok[1];
+    $lk=$szamok[1];
+    $legtobb = array(1);
+    $legkevesebb = array(1);
+    for($i=2; $i<91; ++$i){
+        if($lt < $szamok[$i]){
+            $lt = $szamok[$i];
+            $legtobb = array($i);
+        }else if($lt == $szamok[$i]){
+            $legtobb[] = $szamok[$i];
+        }
+
+        if($lk > $szamok[$i]){
+            $lk = $szamok[$i];
+            $legkevesebb = array($i);
+        }else if($lk == $szamok[$i]){
+            $legkevesebb[] = $szamok[$i];
+        }
+    }
+}
+
+
+
+$o_szelesseg=5;        // oszlopszélesség
+$o_koz=10;               // oszlopok közti távolság
+for($i=1; $i<91; ++$i){
+    if(array_search($i, $legtobb)!==false)
+        $oszlopszin=$piros;
+    else if(array_search($i, $legkevesebb)!==false)
+        $oszlopszin=$zold;
+    else $oszlopszin=$kek;
+    imagefilledrectangle($kep,
+     50 + $i*$o_szelesseg + $i*$o_koz,
+     300,
+     50 + $i*$o_szelesseg + $i*$o_koz + $o_szelesseg,
+     300 - $szamok[$i],
+     $oszlopszin);
+    imagestring($kep, 1, 50 + $i*$o_szelesseg + $i*$o_koz, 300,
+     $szamok[$i], $oszlopszin);
+    imagestring($kep, 2, 50 + $i*$o_szelesseg + $i*$o_koz, 310,
+     $i, $oszlopszin);
+}
+
+imagepng($kep);
+imagedestroy($kep);
+
+?>

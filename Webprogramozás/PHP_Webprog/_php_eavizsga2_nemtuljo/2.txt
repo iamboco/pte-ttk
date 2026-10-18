@@ -1,0 +1,128 @@
+﻿<?php
+
+function dblogin(){
+  $host="localhost";
+  $user="user";
+  $pass="pass";
+  $dbname="user";
+  $port="5432";
+  $connect=pg_connect('host=\''.$host.'\' user=\''.$user.'\' password=\''.$pass.'\' dbname=\''.$dbname.'\' port=\''.$port.'\'');
+  return($connect);
+}
+
+mb_internal_encoding("iso-8859-2");
+print '<meta charset="iso-8859-2">';
+
+?>
+
+Kódolás:<br />
+<form name="urlap" action="" method="post">
+Szöveg:<input type="text" name="szov" value=""><br />
+Jelszó:<input type="text" name="jsz" value=""><br />
+<input type="submit" name="ok" value="OK">
+</form>
+
+<br /><br />
+Dekódolás:<br />
+<form name="urlap" action="" method="post">
+Szöveg:<input type="text" name="kszov" value="">
+Jelszó:<input type="text" name="kjsz" value="">
+<input type="submit" name="kok" value="OK">
+</form>
+
+<?php
+
+function kodol($szam){
+  switch($szam){
+    case "1": $kod="a";
+    case "2": $kod="b";
+    case "3": $kod="c";
+    case "4": $kod="d";
+    case "5": $kod="e";
+    case "6": $kod="f";
+    case "7": $kod="g";
+    case "8": $kod="h";
+    case "9": $kod="i";
+    case "10": $kod="j";
+    case "11": $kod="k";
+    case "12": $kod="l";
+    case "13": $kod="m";
+    case "14": $kod="n";
+    case "15": $kod="o";
+    case "16": $kod="p";
+    case "17": $kod="q";
+    case "18": $kod="r";
+    case "19": $kod="s";
+    case "20": $kod="t";
+    case "21": $kod="u";
+    case "22": $kod="v";
+    case "23": $kod="w";
+    case "24": $kod="x";
+    case "25": $kod="y";
+    case "26": $kod="z";
+    case "27": $kod="A";
+    case "28": $kod="B";
+    case "29": $kod="C";
+    case "30": $kod="D";
+    case "31": $kod="E";
+    case "32": $kod="F";
+    case "33": $kod="G";
+    case "34": $kod="H";
+    case "35": $kod="I";
+    case "36": $kod="J";
+    case "37": $kod="K";
+    case "38": $kod="L";
+    case "39": $kod="M";
+    case "40": $kod="N";
+    case "41": $kod="O";
+    case "42": $kod="P";
+    case "43": $kod="Q";
+    case "44": $kod="R";
+    case "45": $kod="S";
+    case "46": $kod="T";
+    case "47": $kod="U";
+    case "48": $kod="V";
+    case "49": $kod="W";
+    case "50": $kod="X";
+  }
+  return $kod;
+}
+
+if(isset($_POST["ok"]) && isset($_POST["szov"]) && isset($_POST["jsz"])){
+  $szoveg=array();
+  for($i=0; $i<mb_strlen($_POST["szov"]); ++$i)
+    $szoveg[]=$_POST["szov"][$i];
+  $karakterek=array();
+  for($i=0; $i<count($szoveg); ++$i)
+    if(array_search($szoveg[$i], $karakterek)===false) $karakterek[]=$szoveg[$i];
+  // print "<pre>";
+  // print_r($karakterek);
+  // print "</pre>";
+  $kod=array();
+  for($i=0; $i<count($karakterek); ++$i){
+    $kod[]=kodol(rand(1,50));
+  }
+  $karstr = implode($karakterek);
+  $kodstr = implode($kod);
+  $sql="INSERT INTO kkod VALUES('".md5($_POST["jsz"])."', '".$kodstr."','".$karstr."');";
+  $query=pg_exec(dblogin(),$sql);
+  
+  print "<br />Kódolt szöveg: ";
+  foreach($szoveg as $b)
+    print $kod[array_search($b, $karakterek)];
+}else if(isset($_POST["kok"]) && isset($_POST["kszov"]) && isset($_POST["kjsz"])){
+  $szoveg=array();
+  for($i=0; $i<mb_strlen($_POST["kszov"]); ++$i)
+    $szoveg[]=$_POST["kszov"][$i];
+  $sql="SELECT * FROM kkod WHERE kkod.kod='".md5($_POST["kjsz"])."';";
+  $query=pg_exec(dblogin(),$sql);
+  if (pg_num_rows($query)>0){
+    $kodstr=pg_result($query,0,2);
+    $karstr=pg_result($query,0,3);
+    print "<br />Dekódolt szöveg: ";
+    foreach($szoveg as $kar)
+      print $karstr[array_search($kar, $kodstr)];
+  }else print "<br />Helytelen, nem létező jelszó!";
+}
+
+?>

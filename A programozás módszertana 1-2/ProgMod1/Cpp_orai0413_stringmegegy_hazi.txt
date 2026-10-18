@@ -1,0 +1,7 @@
+1. csokkent (1000-bõl 999 legyen, ne 0999)
+2. adott számrendszerben
+3. novel-csokkent 2-vel
+4. negatív egészekkel is
+5. ne csak egész
+6. string osszead(string egyik, string masik)
+	kivon()

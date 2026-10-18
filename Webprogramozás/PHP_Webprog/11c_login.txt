@@ -1,0 +1,68 @@
+<!-- GET helyett POST ==> nem látszik az URL-ben -->
+
+<form name="urlap" method="post" action="">
+<table>
+<tr><td>Login:</td><td><input type="text" name="user" maxlength="10" size="8"></td></tr>
+<tr><td>Password: </td><td><input type="password" name="password" maxlength="10" size="5"></td></tr>
+<tr><td align="center" colspan="2"><input type="submit" name="oke" value="Belepes"></tr></tr>
+</table>
+</form>
+
+<?php
+
+// Éles helyzetben a public_html-be nem rakunk jelszófájlt még kódolva se!!!
+
+$filename="tizenegyedikc_jelszo.txt";
+if(file_exists($filename) && is_file($filename) && is_readable($filename) &&
+ isset($_POST["oke"]) && isset($_POST["user"]) && isset($_POST["password"])){
+    $handle=fopen($filename,"r");
+    $usernev = array();
+    $jog = array();
+    $jelszo = array();
+    while(!feof($handle)){
+        $sor = fgets($handle);
+        $soradat = explode(";",$sor);
+        //print $sor;
+
+        if($sor!=""){
+            $nev[] = trim($soradat[0]);
+            $jog[] = trim($soradat[1]);
+            $jelszo[] = trim($soradat[2]);
+        }
+    }
+        //print "<pre>";
+        //print_r($nev);
+        //print_r($jog);
+        //print_r($jelszo);
+        //print "</pre>";
+
+        /*    print "<table border=\"1\">";
+            foreach($nev as $key => $value)
+            print "<tr><td>".$value."</td><td>".$szido[$key]."</td></tr>";
+            print "</table>";*/
+    $felh_ok=0;
+    $jelszo_ok=0;
+    for($i=0; $i<count($nev); ++$i)
+        if($_POST["user"]===$nev[$i]){
+            $felh_ok=1;
+            if($_POST["password"]===$jelszo[$i])
+                { $jelszo_ok=1; break; }
+        }
+
+    if(!$felh_ok) print "Nem letezo felhasznalonev!";
+    else if(!$jelszo_ok) print "Hibas jelszo!";
+    else {
+        if($jog[$i]==0){
+            print "Admin oldal: <a href=\"tizenegyedikc_admin.php\">ADMIN</a><br />";
+        }else{
+            print "User oldal: <a href=\"tizenegyedikc_user.php\">USER</a><br />";
+        }
+        print "<a href=\"logout.php\">LOGOUT</a>";
+        session_start();
+        $_SESSION["user"]=$nev[$i];
+        $_SESSION["level"]=$jog[$i];
+    }
+
+}
+
+?>

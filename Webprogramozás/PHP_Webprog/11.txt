@@ -1,0 +1,34 @@
+<?php
+header("Content-type: image/png");
+
+$elemek=300;
+for($i=0; $i<$elemek; ++$i)
+    $szamok[]=rand(0,360);
+
+$kep = imagecreate(800,400);
+$feher=imagecolorallocate($kep,255,255,255);
+$fekete=imagecolorallocate($kep,0,0,0);
+$kek=imagecolorallocate($kep,0,0,255);
+$piros=imagecolorallocate($kep,255,0,0);
+
+
+
+imageline($kep,20,200,760,200,$fekete);
+imageline($kep,30,30,30,370,$fekete);
+imageline($kep,30,30,35,40,$fekete);
+imageline($kep,30,30,25,40,$fekete);
+imageline($kep,760,200,750,205,$fekete);
+imageline($kep,760,200,750,195,$fekete);
+
+sort($szamok);
+for($i=0; $i<$elemek; ++$i){
+    if($i) imageline($kep,30+($i-1)*2,200-(sin(deg2rad($szamok[($i-1)]))*135),30+$i*2,200-(sin(deg2rad($szamok[$i]))*135),$kek);
+    if($i) imageline($kep,30+($i-1)*2,370-$szamok[($i-1)],30+$i*2,370-$szamok[$i],$piros);
+    // imagesetpixel($kep,30+$i*2,370-$szamok[$i],$feher);
+    // imagesetpixel($kep,30+$i*2,200-(sin(deg2rad($szamok[$i]))*135),$feher);
+}
+
+imagepng($kep);
+imagedestroy($kep);
+
+?>
