@@ -1,6 +1,6 @@
 Kombinált tanulási sedéglet anyag a Pécsi Tudományegyetem (PTE) Természettudományi Kar (TTK) Programtervező Informatikus hallgatói számára.
 
-A repo 3 másik repo, illetve saját anyaggyűjteménnyel kitoldott "összegyúrt" verzióját tartalmazza.
+A repo 3 másik repo és 2 oldal, illetve saját anyaggyűjteménnyel kitoldott "összegyúrt" verzióját tartalmazza.
 
 Köszönet érte "elődeinknek":
 - https://github.com/31b4 | https://github.com/31b4/pte-proginf-bsc
